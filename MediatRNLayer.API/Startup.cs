@@ -37,7 +37,6 @@ namespace MediatRNLayer.API
                  });
             });
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddMediatR(typeof(GetProductsHandler).GetTypeInfo().Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>

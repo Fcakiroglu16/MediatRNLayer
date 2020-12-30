@@ -12,7 +12,7 @@ namespace MediatRNLayer.Service.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //  builder.RegisterType(typeof(Repository<>)).As(typeof(IRepository<>));
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }
     }
 }

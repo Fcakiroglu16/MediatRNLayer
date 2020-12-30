@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MediatRNlayer.Domain.Queries;
+using MediatRNlayer.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,8 +14,11 @@ namespace MediatRNLayer.API.Controllers
     [ApiController]
     public class ProductsController : ApiBaseController
     {
-        public ProductsController(IMediator mediator) : base(mediator)
+        private readonly IOrnekRepository _repository;
+
+        public ProductsController(IMediator mediator, IOrnekRepository ornekRepository) : base(mediator)
         {
+            _repository = ornekRepository;
         }
 
         [HttpGet]
@@ -23,6 +27,12 @@ namespace MediatRNLayer.API.Controllers
             var products = await QueryAsync(new GetProductQuery());
 
             return Ok(products);
+        }
+
+        [HttpPost]
+        public IActionResult topla()
+        {
+            return Ok(_repository.topla(3, 4));
         }
     }
 }
