@@ -1,18 +1,19 @@
+﻿using Autofac;
+using MediatR;
+using MediatRNlayer.Domain.Repositories;
 using MediatRNLayer.Data;
+using MediatRNLayer.Data.Repositories;
+using MediatRNLayer.Service.Handlers;
+using MediatRNLayer.Service.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace MediatRNLayer.API
 {
@@ -36,11 +37,19 @@ namespace MediatRNLayer.API
                  });
             });
 
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddMediatR(typeof(GetProductsHandler).GetTypeInfo().Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MediatRNLayer.API", Version = "v1" });
             });
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            //service tarafından yapılan  DI nesnelerinide istersen ezebilirsin.
+            builder.RegisterModule(new RepositoryModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
